@@ -4,7 +4,8 @@ class UserController {
   async store(req, res) { // store cria o usuario
     try {
       const novoUser = await User.create(req.body);
-      return res.json({ novoUser });
+      const { id, nome, email } = novoUser;
+      return res.json({ id, nome, email });
     } catch (e) {
       return res.status(400).json({
         errors: e.errors.map((err) => err.message),
@@ -14,7 +15,7 @@ class UserController {
 
   async index(req, res) {
     try {
-      const users = await User.findAll(); // encontra todos usuarios
+      const users = await User.findAll({ attributes: ['id', 'nome', 'email'] }); // encontra todos usuarios e so mostra os dados dentro do attributes
       return res.json(users);
     } catch (e) {
       return res.json(null);
@@ -23,9 +24,9 @@ class UserController {
 
   async show(req, res) { // encontra 1 user pelo PK
     try {
-      const { id } = req.params;
-      const users = await User.findByPk(id); // primaryKey é o id do usuario
-      return res.json(users);
+      const users = await User.findByPk(req.params.id); // primaryKey é o id do usuario
+      const { id, nome, email } = users;
+      return res.json({ id, nome, email }); // mostra so isso
     } catch (e) {
       return res.json(null);
     }
@@ -33,14 +34,7 @@ class UserController {
 
   async update(req, res) {
     try {
-      const { id } = req.params;
-      if (!id) {
-        return res.status(400).json({
-          errors: ['Missing ID'],
-        });
-      }
-
-      const users = await User.findByPk(id); // primaryKey é o id do usuario
+      const users = await User.findByPk(req.userId); // primaryKey é o id do usuario
       if (!users) {
         return res.status(400).json({
           errors: ['Usuário não existe'],
@@ -48,7 +42,8 @@ class UserController {
       }
 
       const novosDados = await users.update(req.body);
-      return res.json(novosDados);
+      const { id, nome, email } = novosDados;
+      return res.json({ id, nome, email });
     } catch (e) {
       return res.status(400).json({
         errors: e.errors.map((err) => err.message),
@@ -58,14 +53,7 @@ class UserController {
 
   async delete(req, res) {
     try {
-      const { id } = req.params;
-      if (!id) {
-        return res.status(400).json({
-          errors: ['Missing ID'],
-        });
-      }
-
-      const users = await User.findByPk(id); // primaryKey é o id do usuario
+      const users = await User.findByPk(req.userId); // primaryKey é o id do usuario
       if (!users) {
         return res.status(400).json({
           errors: ['Usuário não existe'],
@@ -73,7 +61,7 @@ class UserController {
       }
 
       await users.destroy(req.body);
-      return res.json(users);
+      return res.json(null);
     } catch (e) {
       return res.status(400).json({
         errors: e.errors.map((err) => err.message),
