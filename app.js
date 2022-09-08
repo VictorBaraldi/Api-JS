@@ -9,6 +9,7 @@ import homeRoute from './src/routes/home';
 import userRoute from './src/routes/user';
 import tokenRoute from './src/routes/token';
 import alunoRoute from './src/routes/aluno';
+import fotoRoute from './src/routes/foto';
 
 class App {
   constructor() {
@@ -27,6 +28,7 @@ class App {
     this.app.use('/users/', userRoute);
     this.app.use('/tokens/', tokenRoute);
     this.app.use('/alunos/', alunoRoute);
+    this.app.use('/fotos/', fotoRoute);
   }
 }
 
