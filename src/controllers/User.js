@@ -62,11 +62,7 @@ class UserController {
 
       await users.destroy(req.body);
       return res.json(null);
-    } catch (e) {
-      return res.status(400).json({
-        errors: e.errors.map((err) => err.message),
-      });
-    }
+    } catch (e) { return res.status(401).json({ errors: ['credenciais inválidas'] }); }
   }
 }
 
