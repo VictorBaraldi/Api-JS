@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { resolve } from 'path';
 
 dotenv.config();
 
@@ -21,14 +22,15 @@ class App {
   middlewares() {
     this.app.use(express.urlencoded({ express: true }));
     this.app.use(express.json());
+    this.app.use(express.static(resolve(__dirname, 'upload')));
   }
 
   routes() {
-    this.app.use('/', homeRoute);
-    this.app.use('/users/', userRoute);
-    this.app.use('/tokens/', tokenRoute);
-    this.app.use('/alunos/', alunoRoute);
-    this.app.use('/fotos/', fotoRoute);
+    this.app.use('/api/', homeRoute);
+    this.app.use('/api/users/', userRoute);
+    this.app.use('/api/tokens/', tokenRoute);
+    this.app.use('/api/alunos/', alunoRoute);
+    this.app.use('/api/fotos/', fotoRoute);
   }
 }
 
